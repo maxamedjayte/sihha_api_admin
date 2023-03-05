@@ -149,7 +149,7 @@ urlpatterns = [
     path('userPaidingCharges/<str:paymentType>/<str:itemType>/',views.merchantPaidApi),
 
     path('searchProduct/<str:searchKey>/',views.searchProduct),
-    path('sendOtpSMS/<str:userNumber>/',views.sendOtpSMS),
+    # path('sendOtpSMS/<str:userNumber>/',views.sendOtpSMS),
     
     path('sendAppointmentNot/<str:email>/',views.sendAppointmentNot)
 ]   

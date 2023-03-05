@@ -14,7 +14,6 @@ from django.utils.html import strip_tags
 import os
 import random
 from decouple import config
-from twilio.rest import Client 
 # Create your views here.
 
 # userprofiles data
@@ -1187,24 +1186,24 @@ def searchProduct(request,searchKey):
 # ACfdff520a30544ca1530b2e8092dab448    sid
 
 # 169100293d9eea3a51fb492630bb862d    token
-@api_view(['GET'])
-def sendOtpSMS(request,userNumber):
-    # Download the helper library from https://www.twilio.com/docs/python/install
-    # Set environment variables for your credentials
-    # Read more at http://twil.io/secure
-    api_key='293832-67745-11e5-88de-5600000c6b13'
-    account_sid = config('ACCOUNT_SID')
-    auth_token = config('AUTH_TOKEN')
+# @api_view(['GET'])
+# def sendOtpSMS(request,userNumber):
+#     # Download the helper library from https://www.twilio.com/docs/python/install
+#     # Set environment variables for your credentials
+#     # Read more at http://twil.io/secure
+#     api_key='293832-67745-11e5-88de-5600000c6b13'
+#     account_sid = config('ACCOUNT_SID')
+#     auth_token = config('AUTH_TOKEN')
 
-    client = Client(account_sid, auth_token)
+#     client = Client(account_sid, auth_token)
 
-    sendedNumber=str(random.randint(4,9000))
-    message = client.messages.create(
-                body='SIHHA-APP activation codeka :- '+str(sendedNumber) +' fadlan hala waadig qof kale',
-                from_='+12708176406',
-                to=userNumber
-            )
-    return Response({'sendedCode':sendedNumber})
+#     sendedNumber=str(random.randint(4,9000))
+#     message = client.messages.create(
+#                 body='SIHHA-APP activation codeka :- '+str(sendedNumber) +' fadlan hala waadig qof kale',
+#                 from_='+12708176406',
+#                 to=userNumber
+#             )
+#     return Response({'sendedCode':sendedNumber})
 
 
 
