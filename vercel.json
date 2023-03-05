@@ -1,0 +1,13 @@
+{
+    "builds": [{
+        "src": "shiffa_app/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "170mb" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "shiffa_app/wsgi.py"
+        }
+    ]
+}

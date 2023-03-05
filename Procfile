@@ -1,0 +1,1 @@
+web: gunicorn shiffa_app.wsgi

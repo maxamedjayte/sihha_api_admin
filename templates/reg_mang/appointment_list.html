@@ -1,0 +1,290 @@
+{% extends 'base_datatable.html' %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="page-title">Xogta Bookinkinada</h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Dastyle</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tables</a></li>
+                            <li class="breadcrumb-item active">Datatables</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto align-self-center">
+
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                            <i data-feather="download" class="align-self-center icon-xs"></i>
+                        </a>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Xogta Bookinada</h4>
+                    <p class="text-muted mb-0">DataTables has most features enabled by
+                        default, so all you need to do to use it with your own tables is to call
+                        the construction function: <code>$().DataTable();</code>.
+                    </p>
+                </div><!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>SHAQSIGA</th>
+                                <th>NUUCA-BUKINKA</th>
+                                <th>WAQ DHAQTARKA</th>
+                                <th>linkiga</th>
+                                <th>XAALADA</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for appoint in upcomingAppointments %}
+                            {% if appoint.sessionEnded == False %}
+                            <tr>
+                                <td>
+                                    <a href="" class="fw-bold text-muted">#{{appoint.pk}}</a>
+                                </td>
+                                <td>
+                                    <a href="/user_detail/{{appoint.theUser.pk}}/" class="d-flex">
+                                        {% if appoint.theUser.profileImage %}
+                                        <img class="me-3 rounded-circle" src="{{appoint.theUser.profileImage.url}}"
+                                            alt="Generic placeholder image" height="36">
+                                        {% else %}
+                                        {% endif %}
+                                        <div class="chat-user-box">
+                                            <p class="user-title m-0">{{appoint.theUser.fullName}}</p>
+                                            <p class="text-muted">{{appoint.theUser.number}}</p>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>{{appoint.theCategory.categoryName}} <strong>
+                                        {{appoint.theCategory.meetinTime}}</strong></td>
+                                <!-- <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td> -->
+
+                                <td>{{appoint.appointmentMeetingLink}}</td>
+                                <td>{{appoint.doctorAssignedDated}}</td>
+
+                                <td>
+                                    {% if appoint.sessionEnded %}
+                                    <button type="button"
+                                        class="btn btn-info waves-effect waves-light">DHAMAADAY</button>
+                                    {% else %}
+
+                                    <button type="button" onclick="updateUserEnded('{{appoint.id}}')"
+                                        class="btn btn-info waves-effect waves-light">AAN
+                                        -DHAMMAAN</button>
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    <button data-toggle="modal" data-target="#waqtisiinUpdateModal{{appoint.id}}" type="button"
+                                        class="btn btn-success waves-effect waves-light">WAQTI SIIN</button>
+
+                                </td>
+
+                            </tr>
+                            <div class="modal fade" id="waqtisiinUpdateModal{{appoint.id}}" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalDefaultLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h6 class="modal-title m-0" id="exampleModalDefaultLabel">Default Modal</h6>
+                                            <button type="button" class="close " data-dismiss="modal"
+                                                aria-label="Close">
+                                                <span aria-hidden="true"><i class="la la-times"></i></span>
+                                            </button>
+                                        </div><!--end modal-header-->
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-3 text-center align-self-center">
+                                                    <img src="assets/images/widgets/btc.png" alt="" class="img-fluid">
+                                                </div><!--end col-->
+                                                <div class="col-lg-9">
+                                                    <h5>Crypto Market Services</h5>
+                                                    <span class="badge bg-soft-secondary">Disable Services</span>
+                                                    <small class="text-muted ml-2">07 Oct 2020</small>
+                                                    <ul class="mt-3 mb-0">
+                                                        <li>Lorem Ipsum is dummy text.</li>
+                                                        <li>It is a long established reader.</li>
+                                                        <li>Contrary to popular belief, Lorem simply.</li>
+                                                    </ul>
+                                                </div><!--end col-->
+                                            </div><!--end row-->
+                                        </div><!--end modal-body-->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary btn-sm">Save changes</button>
+                                        </div><!--end modal-footer-->
+                                    </div><!--end modal-content-->
+                                </div><!--end modal-dialog-->
+                            </div><!--end modal-->
+
+                            {% endif %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">BUUKINADII HORE</h4>
+                    <p class="text-muted mb-0">DataTables has most features enabled by
+                        default, so all you need to do to use it with your own tables is to call
+                        the construction function: <code>$().DataTable();</code>.
+                    </p>
+                </div><!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>SHAQSIGA</th>
+                                <th>NUUCA-BUKINKA</th>
+                                <th>WAQ DHAQTARKA</th>
+                                <th>LINKIGA</th>
+                                <th>XAALADA</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for appoint in upcomingAppointments %}
+                            {% if appoint.sessionEnded == True %}
+                            <tr>
+                                <td>
+                                    <a href="" class="fw-bold text-muted">#{{appoint.pk}}</a>
+                                </td>
+                                <td>
+                                    <a href="/user_detail/{{appoint.theUser.pk}}/" class="d-flex">
+                                        {% if appoint.theUser.profileImage %}
+                                        <img class="me-3 rounded-circle" src="{{appoint.theUser.profileImage.url}}"
+                                            alt="Generic placeholder image" height="36">
+                                        {% else %}
+                                        {% endif %}
+                                        <div class="chat-user-box">
+                                            <p class="user-title m-0">{{appoint.theUser.fullName}}</p>
+                                            <p class="text-muted">{{appoint.theUser.number}}</p>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>{{appoint.theCategory.categoryName}} <strong>
+                                        {{appoint.theCategory.meetinTime}}</strong></td>
+                                <!-- <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td> -->
+
+                                <td>{{appoint.appointmentMeetingLink}}</td>
+                                <td>{{appoint.doctorAssignedDated}}</td>
+
+                                <td>
+                                    {% if appoint.sessionEnded %}
+                                    <button type="button"
+                                        class="btn btn-info waves-effect waves-light">DHAMAADAY</button>
+                                    {% else %}
+
+                                    <button type="button" onclick="updateUserEnded('{{appoint.id}}')"
+                                        class="btn btn-info waves-effect waves-light">AAN
+                                        -DHAMMAAN</button>
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    <button data-bs-toggle="modal" data-bs-target="#updatingDataModal" type="button"
+                                        class="btn btn-success waves-effect waves-light">WAQTI SIIN</button>
+
+                                </td>
+
+                            </tr>
+
+                            {% endif %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function updateUserEnded(id) {
+        var formData = new FormData();
+        formData.append('sessionEnded',true)
+        $.ajax({
+            type: "POST",
+            data: formData,
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            url: `/api/doctorAppointment-update/${id}/`,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: async function (updatedResp) {
+                console.log(updatedResp)
+                if (updatedResp.status == 'success') {
+                    swal("Waa lagu guulaystay Badalidda Xogta", {
+                        icon: "success"
+                    });
+                    document.getElementById('userUdateForm').reset()
+                    // $('#productRoutineForm').modal('hide');
+                    location.reload()
+                }
+            },
+            error: function (respErr) {
+                
+            }
+        })
+    }
+    document.getElementById('updatingDataModal').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(e.target);
+        var appointmentId = $('[name=appointmentId]').val()
+        console.log(formData)
+        console.log(appointmentId)
+        $.ajax({
+            type: "POST",
+            data: formData,
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            url: `/api/doctorAppointment-update/${appointmentId}/`,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: async function (updatedResp) {
+                console.log(updatedResp)
+                if (updatedResp.status == 'success') {
+                    swal("Waa lagu guulaystay Badalidda Xogta", {
+                        icon: "success"
+                    });
+                    document.getElementById('userUdateForm').reset()
+                    // $('#productRoutineForm').modal('hide');
+                    location.reload()
+                }
+            },
+            error: function (respErr) {
+
+            }
+        })
+
+    })
+</script>
+{% endblock %}

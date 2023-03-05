@@ -1,0 +1,116 @@
+{% extends 'base_datatable.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="page-title">Xogta Userska Diiwaangashan</h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Dastyle</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tables</a></li>
+                            <li class="breadcrumb-item active">Datatables</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto align-self-center">
+
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                            <i data-feather="download" class="align-self-center icon-xs"></i>
+                        </a>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Dhamaan Userska</h4>
+                    <p class="text-muted mb-0">DataTables has most features enabled by
+                        default, so all you need to do to use it with your own tables is to call
+                        the construction function: <code>$().DataTable();</code>.
+                    </p>
+                </div><!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th width="10px">ID</th>
+                                <th width="10px">Img</th>
+                                <th>Magaca</th>
+                                <!-- <th>Password</th> -->
+                                <th>Nooca</th>
+                                <th>Jinsiga</th>
+                                <th>Da'da</th>
+                                <th>Expire</th>
+                                <th>XAALADA</th>
+                                <th width="10px">#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usrInfo in usersInfo %}
+
+                            <tr>
+                                <td>
+                                    <a href="#" class="fw-bold text-muted"># {{usrInfo.pk}}</a>
+                                </td>
+                                <td>
+                                    <div class="avatar-group d-flex">
+                                        <div class="avatar-group-item">
+                                            {% if usrInfo.profileImage %}
+                                            <img src="{{usrInfo.profileImage.url}}" alt=""
+                                                class="rounded-circle thumb-xs mr-1">
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </td>
+                                <td> <a href="/user_detail/{{usrInfo.pk}}/" class="d-inline-block">
+                                        <strong>{{usrInfo.fullName}} </strong>
+                                        <p>{{usrInfo.number}}</p>
+                                    </a></td>
+
+                                <!-- <td>{{usrInfo.password}}</td> -->
+                                {% if usrInfo.isSubscribedUser %}
+                                <td><span class="badge bg-success">RUKUN</span></td>
+                                {% else %}
+                                <td><span class="badge bg-danger">CAADI</span></td>
+                                {% endif %}
+                                {% if usrInfo.sex == 'male' %}
+                                <td style="font-weight: bold;">LAB</td>
+                                {% else %}
+                                <td style="font-weight: bold;">DHADIG</td>
+                                {% endif %}
+                                <!-- <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td> -->
+
+
+                                <td>{{usrInfo.age}}</td>
+                                <td>{{usrInfo.latestSbscriptionDateTo}}</td>
+                                <td>
+                                    {% if usrInfo.is_activate %}
+                                    <button class="btn btn-primary btn-sm">ACTIVED</button>
+                                    {% else %}
+                                    <button class="btn btn-danger btn-sm">NOT ACTIVED</button>
+                                    {% endif %}
+                                </td>
+                                <td>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,290 @@
+{% extends 'base_datatable.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="page-title">Xogta Userska Diiwaangashan</h4>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Dastyle</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Tables</a></li>
+                            <li class="breadcrumb-item active">Datatables</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto align-self-center">
+
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                            <i data-feather="download" class="align-self-center icon-xs"></i>
+                        </a>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">PRODUCTS HADDA</h4>
+                    <p class="text-muted mb-0">DataTables has most features enabled by
+                        default, so all you need to do to use it with your own tables is to call
+                        the construction function: <code>$().DataTable();</code>.
+                    </p>
+                </div><!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>SHAQSIGA</th>
+                                <th>BADEECADA</th>
+                                <th>HABKA</th>
+                                <th>WAQTIGA</th>
+                                <th>XAALADA</th>
+                                <th>DHIMID</th>
+                                <th>HELAY</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ord in orderedProducts %}
+                            {% if ord.status != "Completed" %}
+                            <tr>
+                                <td>
+                                    <a href="" class="fw-bold text-muted">#{{ord.pk}}</a>
+                                </td>
+                                <td>
+                                    <a href="/user_detail/{{ord.theUser.pk}}/" class="d-flex">
+                                        <img class="me-3 rounded-circle" src="{{ord.theUser.profileImage.url}}"
+                                            alt="Generic placeholder image" height="36">
+                                        <div class="chat-user-box">
+                                            <p class="user-title m-0">{{ord.theUser.fullName}}</p>
+                                            <p class="text-muted">{{ord.theUser.number}}</p>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>{{ord.theProductInfo.name}} <strong> ${{ord.theProductInfo.price}}</strong></td>
+                                <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                <td>{{ord.orderTime}}</td>
+                                {% if ord.status == 'Pending' %}
+                                <td>
+                                    <button type="button" class="btn btn-warning waves-effect waves-light"
+                                        data-toggle="modal"
+                                        data-target="#orderdProductStatusModal{{ord.pk}}">Pending</button>
+                                </td>
+                                {% elif ord.status == 'Delivering' %}
+                                <td>
+                                    <button type="button" class="btn btn-info waves-effect waves-light"
+                                        data-toggle="modal"
+                                        data-target="#orderdProductStatusModal{{ord.pk}}">Delivering</button>
+                                </td>
+                                {% else %}
+                                <td>
+                                    <button type="button" class="btn btn-success waves-effect waves-light"
+                                        data-toggle="modal"
+                                        data-target="#orderdProductStatusModal{{ord.pk}}">Completed</button>
+
+                                </td>
+                                {% endif %}
+                                <td>${{ord.discount}}</td>
+                                {% if ord.userTaked %}
+                                <td><span class="badge bg-success">HELAY</span></td>
+                                {% else %}
+                                <td><span class="badge bg-danger">MA HELIN</span></td>
+                                {% endif %}
+                                <td>
+                                    <a href="javascript:void(0);" class="me-3 text-muted"><i
+                                            class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i
+                                            class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="orderdProductStatusModal{{ord.pk}}" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalInfo1" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <form id="orderStatusForm">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-info">
+                                                <h5 class="modal-title m-0 text-white" id="exampleModalInfo1">XAALADA
+                                                    PRODUCTIGA</h5>
+                                                <button type="button" class="close " data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true"><i
+                                                            class="la la-times text-white"></i></span>
+                                                </button>
+                                            </div><!--end modal-header-->
+                                            <div class="modal-body">
+                                                <div class="row" id="orderStatusLoading"> 
+                                                    <button type="button"
+                                                        class="btn btn-warning waves-effect waves-light m-2"
+                                                        onclick="updateProductStatus('{{ord.pk}}','Pending')">Pending</button>
+                                                    <button type="button"
+                                                        class="btn btn-info waves-effect waves-light m-2"
+                                                        onclick="updateProductStatus('{{ord.pk}}','Delivering')">Delevering</button>
+                                                    <button type="button"
+                                                        class="btn btn-success waves-effect waves-light m-2"
+                                                        onclick="updateProductStatus('{{ord.pk}}','Completed')">Completed</button>
+                                                </div>
+                                            </div><!--end modal-body-->
+                                            <!-- <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-info btn-sm">Save changes</button>
+                                            </div>end modal-footer -->
+                                        </div><!--end modal-content-->
+                                    </form>
+                                </div><!--end modal-dialog-->
+                            </div><!--end modal-->
+                            {% endif %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">DALABAADKII HORE</h4>
+                    <p class="text-muted mb-0">DataTables has most features enabled by
+                        default, so all you need to do to use it with your own tables is to call
+                        the construction function: <code>$().DataTable();</code>.
+                    </p>
+                </div><!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>SHAQSIGA</th>
+                                <th>BADEECADA</th>
+                                <th>HABKA</th>
+                                <th>WAQTIGA</th>
+                                <th>XAALADA</th>
+                                <th>DHIMID</th>
+                                <th>HELAY</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ord in orderedProducts %}
+                            {{ord.status}}
+                            {% if ord.status == "Completed" %}
+                            <tr>
+                                <td>
+                                    <a href="" class="fw-bold text-muted">#{{ord.pk}}</a>
+                                </td>
+                                <td>
+                                    <a href="/user_detail/{{ord.theUser.pk}}/" class="d-flex">
+                                        <img class="me-3 rounded-circle" src="{{ord.theUser.profileImage.url}}"
+                                            alt="Generic placeholder image" height="36">
+                                        <div class="chat-user-box">
+                                            <p class="user-title m-0">{{ord.theUser.fullName}}</p>
+                                            <p class="text-muted">{{ord.theUser.number}}</p>
+                                        </div>
+                                    </a>
+                                </td>
+                                <td>{{ord.theProductInfo.name}} <strong> ${{ord.theProductInfo.price}}</strong></td>
+                                <td><i class="fab fa-cc-visa text-muted font-size-20"></i> </td>
+                                <td>{{ord.orderTime}}</td>
+                            
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-success waves-effect waves-light"
+                                        >Completed</button>
+                                </td>
+                                
+                                <td>${{ord.discount}}</td>
+                                {% if ord.userTaked %}
+                                <td><span class="badge bg-success">HELAY</span></td>
+                                {% else %}
+                                <td><span class="badge bg-danger">MA HELIN</span></td>
+                                {% endif %}
+                                <td>
+                                    <a href="javascript:void(0);" class="me-3 text-muted"><i
+                                            class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i
+                                            class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+
+                            
+                            {% endif %}
+                            {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script>
+    function updateProductStatus(id, status) {
+        var formData = new FormData();
+        isLoading=true;
+        if (isLoading) {
+            document.getElementById('orderStatusLoading').innerHTML=`
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>
+                </button>
+                &nbsp;
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>      
+                &nbsp;   
+                &nbsp;
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>
+                </button>
+                &nbsp;
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>                                                          
+            </div>
+            
+            `
+        }
+        formData.append('status', status)
+        $.ajax({
+            type: "POST",
+            data: formData,
+            headers: { 'X-CSRFToken': getCookie('csrftoken') },
+            url: `/api/orderedProduct-update/${id}/`,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: async function (updatedResp) {
+                console.log(updatedResp)
+                if (updatedResp.status == 'success') {
+                    swal("Waa lagu guulaystay Badalidda Xogta", {
+                        icon: "success"
+                    });
+                    // document.getElementById('userUdateForm').reset()
+                    $('#orderdProductStatusModal').modal('hide');
+                    location.reload()
+                }
+            },
+            error: function (respErr) {
+
+            }
+        })
+    }
+</script>
+{% endblock %}
