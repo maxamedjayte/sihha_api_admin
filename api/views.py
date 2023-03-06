@@ -1131,13 +1131,15 @@ def merchantPaidApi(request,paymentType,itemType):
                 fullResp={'paided':True,'status':'failded','productOrdred':False}
                 
         elif itemType=='subscription':
-            userInfo= UserProfile.objects.filter(pk=usrId)
+            print('at subscripton')
+            userInfo = UserProfile.objects.filter(pk=usrId).first()
             userInfo.latestSbscriptionDateFrom=datetime.now()
             userInfo.latestSbscriptionDateTo=datetime.now() + timedelta(days=30)
             userInfo.isSubscribedUser=True
             userInfo.subscriptionActive=True
             userInfo.is_activate=True
             paidResp=waafiPaidMoney(usrNumber,usrMoney,'CABDALLA')
+            print(paidResp)
             if paidResp['paided']:
                 userInfo.save()
                 fullResp={'paided':True,'status':'success','subscriptActivated':True,'fromDate':userInfo.latestSbscriptionDateFrom,'toDate':userInfo.latestSbscriptionDateTo}
