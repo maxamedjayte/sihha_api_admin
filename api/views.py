@@ -1267,7 +1267,7 @@ def waafiPaidMoney(usrNumber,usrMoney,paymentApiType):
                 "invoiceId": "7896504",
                 "amount": usrMoney,
                 "currency": "USD",
-                "description": "Test USD"
+                "description": "from shiffa app"
             }
         }
     }
