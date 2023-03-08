@@ -1132,7 +1132,7 @@ def merchantPaidApi(request,paymentType,itemType):
                 
         elif itemType=='subscription':
             print('at subscripton')
-            userInfo = UserProfile.objects.filter(pk=usrId).first()
+            userInfo = UserProfile.objects.get(pk=usrId)
             userInfo.latestSbscriptionDateFrom=datetime.now()
             userInfo.latestSbscriptionDateTo=datetime.now() + timedelta(days=30)
             userInfo.isSubscribedUser=True
