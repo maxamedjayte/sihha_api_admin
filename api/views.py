@@ -1317,20 +1317,21 @@ def waafiAPIPREAUTHORIZE(request):
     })
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    jsonPaidResp=json.loads(response.text)
+    jsonPaidResp = json.loads(response.text)
+    if str(jsonPaidResp['responseCode'])=='2001':
+        
+        jsonCommitResponse = commitWaafiApiPREAUTHORIZE(jsonPaidResp)
 
-    return Response(jsonPaidResp)
+        return Response({'PRE_AUTH_RESP':jsonPaidResp,'COMMIT_RESP':jsonCommitResponse})
+    else:
+        return Response({'PRE_AUTH_RESP':jsonPaidResp})
 
-
-
-@api_view(['POST'])
+# @api_view(['POST'])
 def commitWaafiApiPREAUTHORIZE(request):
+    print(request)
     url = "https://api.waafipay.net/asm"
-    headers = {
-    'Content-Type': 'application/json'
-    }
+    headers = {'Content-Type': 'application/json'}
     
-    print(request.data)
     try:
         commitPayload = json.dumps({
             "schemaVersion": "1.0",
@@ -1348,16 +1349,35 @@ def commitWaafiApiPREAUTHORIZE(request):
             })
         commitResponse = requests.request("POST", url, headers=headers, data=commitPayload)
         jsonCommitResponse=json.loads(commitResponse.text)
-        return Response(jsonCommitResponse)
+        return jsonCommitResponse
     except Exception as e:
-        return Response({'error':str(e)})
-
+        return {'error':str(e)}
 
 
 @api_view(['POST'])
 def cancelWaafiApiPREAUTHORIZE(request):
-    
-    return Response({'':''})
+    url = "https://api.waafipay.net/asm"
+    headers = {'Content-Type': 'application/json'}
+    try:
+        cancelPayload = json.dumps({
+            "schemaVersion": "1.0",
+            "timestamp": request.data['timestamp'],
+            "requestId": request.data['requestId'],
+            "channelName": "WEB",
+            "serviceName": "API_PREAUTHORIZE_CANCEL",
+            "serviceParams": {
+                "merchantUid": "M0910332",
+                "apiUserId": "1000527",
+                "apiKey": "API-1620730280AHX",
+                "referenceId":request.data['params']['referenceId'],
+                "transactionId": request.data['params']['transactionId']
+            }
+            })
+        cancelResponse = requests.request("POST", url, headers=headers, data=cancelPayload)
+        jsonCancelResponse=json.loads(cancelResponse.text)
+        return Response(jsonCancelResponse)
+    except Exception as e:
+        return Response({'error':str(e)})
 
 # $.ajax({
 #         method: "POST",

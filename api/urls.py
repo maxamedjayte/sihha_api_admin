@@ -150,9 +150,10 @@ urlpatterns = [
 
     path('searchProduct/<str:searchKey>/',views.searchProduct),
     # path('sendOtpSMS/<str:userNumber>/',views.sendOtpSMS),
-    path('waafiApiPREAUTHORIZE/',views.waafiAPIPREAUTHORIZE),
 
+    path('waafiApiPREAUTHORIZE/',views.waafiAPIPREAUTHORIZE),
     path('commitWaafiApiPREAUTHORIZE',views.commitWaafiApiPREAUTHORIZE),
+    path('cancelWaafiApiPREAUTHORIZE',views.cancelWaafiApiPREAUTHORIZE),
     
     path('sendAppointmentNot/<str:email>/',views.sendAppointmentNot)
 ]   
