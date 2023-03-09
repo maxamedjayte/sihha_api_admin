@@ -1098,8 +1098,6 @@ def merchantPaidApi(request,paymentType,itemType):
     fullResp=''
     orderInfo=''
     usrId=request.data['userId']
-    usrNumber=request.data['number']
-    usrMoney=request.data['money']
     if paymentType == 'eDahab':
         if itemType == 'product':
             theProduct=request.data['products']
@@ -1123,7 +1121,7 @@ def merchantPaidApi(request,paymentType,itemType):
                         theUser=UserProfile.objects.get(pk=usrId),
                         theProductInfo=ProductInfo.objects.get(pk=theProduct['id']),
                         quantity=int(theProduct['quantity']),
-                        paidedMoney=float(usrMoney),
+                        paidedMoney=float(request.data['usrMoney']),
                         paymentMethod=paymentType
                     )
                 fullResp={'paided':True,'status':'success','productOrdred':True}
@@ -1283,7 +1281,7 @@ def eDahabPaidMoney(usrNumber,usrMoney):
     return Response({'paided':True})
 
 
-@api_view(['POST'])
+# @api_view(['POST'])
 def waafiAPIPREAUTHORIZE(request,paymentApiType):    
     waafiConfig=WaafiMarchentConfig.objects.first()
     fullResponse={}
