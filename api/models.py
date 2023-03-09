@@ -4,7 +4,6 @@ from email.policy import default
 from django.utils.safestring import mark_safe
 from django.db import models
 from cloudinary_storage.storage import VideoMediaCloudinaryStorage
-
 class SubscriptionFeatures(models.Model):
     featureName=models.CharField(max_length=255,default='')
     desc=models.TextField(default='')

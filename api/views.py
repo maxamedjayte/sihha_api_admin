@@ -3,6 +3,7 @@ import json
 from api.serializers import *
 from django.shortcuts import render,redirect
 import requests
+
 from shiffa_app import settings
 from decouple import config
 from rest_framework.decorators import api_view
@@ -1139,7 +1140,6 @@ def merchantPaidApi(request,paymentType,itemType):
             userInfo.subscriptionActive=True
             userInfo.is_activate=True
             paidResp=waafiPaidMoney(usrNumber,usrMoney,'CABDALLA')
-            print(paidResp)
             if paidResp['paided']:
                 userInfo.save()
                 fullResp={'paided':True,'status':'success','subscriptActivated':True,'fromDate':userInfo.latestSbscriptionDateFrom,'toDate':userInfo.latestSbscriptionDateTo}
@@ -1283,11 +1283,81 @@ def eDahabPaidMoney(usrNumber,usrMoney):
     return Response({'paided':True})
 
 
+@api_view(['POST'])
+def waafiAPIPREAUTHORIZE(request):    
+    fullResponse={}
+    requestTimestmap=datetime.now().timestamp()
+
+    url = "https://api.waafipay.net/asm"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    payload = json.dumps({
+    "schemaVersion": "1.0",
+    "requestId": str(random.randint(1111,9999)),
+    "timestamp": str(requestTimestmap),
+    "channelName": "WEB",
+    "serviceName": "API_PREAUTHORIZE",
+    "serviceParams": {
+        "merchantUid": "M0910332",
+        "apiUserId": "1000527",
+        "apiKey": "API-1620730280AHX",
+        "paymentMethod": "MWALLET_ACCOUNT",
+        "payerInfo": {
+        "accountNo": "252"+request.data['usrNumber']
+        },
+        "transactionInfo": {
+        "referenceId": "1100",
+        "invoiceId": 7012,
+        "amount": request.data['usrMoney'],
+        "currency": "USD",
+        "description": "Product name Purchased"
+        }
+    }
+    })
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    jsonPaidResp=json.loads(response.text)
+
+    return Response(jsonPaidResp)
 
 
-        
+
+@api_view(['POST'])
+def commitWaafiApiPREAUTHORIZE(request):
+    url = "https://api.waafipay.net/asm"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    
+    print(request.data)
+    try:
+        commitPayload = json.dumps({
+            "schemaVersion": "1.0",
+            "timestamp": request.data['timestamp'],
+            "requestId": request.data['requestId'],
+            "channelName": "WEB",
+            "serviceName": "API_PREAUTHORIZE_COMMIT",
+            "serviceParams": {
+                "merchantUid": "M0910332",
+                "apiUserId": "1000527",
+                "apiKey": "API-1620730280AHX",
+                "referenceId":request.data['params']['referenceId'],
+                "transactionId": request.data['params']['transactionId']
+            }
+            })
+        commitResponse = requests.request("POST", url, headers=headers, data=commitPayload)
+        jsonCommitResponse=json.loads(commitResponse.text)
+        return Response(jsonCommitResponse)
+    except Exception as e:
+        return Response({'error':str(e)})
 
 
+
+@api_view(['POST'])
+def cancelWaafiApiPREAUTHORIZE(request):
+    
+    return Response({'':''})
 
 # $.ajax({
 #         method: "POST",
