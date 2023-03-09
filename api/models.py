@@ -157,7 +157,7 @@ class UserProfile(models.Model):
     yearsOfPain=models.IntegerField(default=0)
     # userPruducts=models.ManyToManyField(ProductInfo,null=True,blank=True)
     # subscription
-    latestTimeAnsweredQuestion=models.DateTimeField(null=True,blank=True)
+    latestTimeAnsweredQuestion=models.DateField(null=True,blank=True)
     latestSbscriptionDateFrom=models.DateField(null=True,blank=True)
     latestSbscriptionDateTo=models.DateField(null=True,blank=True)
     inPending=models.BooleanField(default=True)
