@@ -1104,7 +1104,7 @@ def merchantPaidApi(request,paymentType,itemType):
         if itemType == 'product':
             theProduct=request.data['products']
             print(theProduct)
-            paidResp=waafiPaidMoney(usrNumber,usrMoney,'')
+            paidResp=waafiAPIPREAUTHORIZE(request,'')
             if paidResp['paided']:
                 print('user paided')
             else:
@@ -1116,7 +1116,7 @@ def merchantPaidApi(request,paymentType,itemType):
     else:
         if itemType == 'product':
             productsInfo=request.data['products']
-            paidResp=waafiPaidMoney(usrNumber,usrMoney,'')
+            paidResp=waafiAPIPREAUTHORIZE(request,'')
             if paidResp['paided']:
                 for theProduct in productsInfo:
                     OrderedProduct.objects.create(
@@ -1139,7 +1139,7 @@ def merchantPaidApi(request,paymentType,itemType):
             userInfo.isSubscribedUser=True
             userInfo.subscriptionActive=True
             userInfo.is_activate=True
-            paidResp=waafiPaidMoney(usrNumber,usrMoney,'CABDALLA')
+            paidResp=waafiAPIPREAUTHORIZE(request,'CABDALLA')
             if paidResp['paided']:
                 userInfo.save()
                 fullResp={'paided':True,'status':'success','subscriptActivated':True,'fromDate':userInfo.latestSbscriptionDateFrom,'toDate':userInfo.latestSbscriptionDateTo}
@@ -1151,7 +1151,7 @@ def merchantPaidApi(request,paymentType,itemType):
             if DoctorAppointment.objects.filter(sessionEnded=False).filter(theUser=UserProfile.objects.get(pk=usrId)).filter(theCategory=AppointmentCategory.objects.get(pk=theCategory)).exists():
                 fullResp={'paided':True,'status':'success','isExist':True,'appointmentCreated':False}
             else:
-                paidResp=waafiPaidMoney(usrNumber,usrMoney,'')
+                paidResp=waafiAPIPREAUTHORIZE(request,'')
                 print(paidResp)
                 if paidResp['paided']:
                     try:
@@ -1284,7 +1284,8 @@ def eDahabPaidMoney(usrNumber,usrMoney):
 
 
 @api_view(['POST'])
-def waafiAPIPREAUTHORIZE(request):    
+def waafiAPIPREAUTHORIZE(request,paymentApiType):    
+    waafiConfig=WaafiMarchentConfig.objects.first()
     fullResponse={}
     requestTimestmap=datetime.now().timestamp()
 
@@ -1299,9 +1300,9 @@ def waafiAPIPREAUTHORIZE(request):
     "channelName": "WEB",
     "serviceName": "API_PREAUTHORIZE",
     "serviceParams": {
-        "merchantUid": "M0910332",
-        "apiUserId": "1000527",
-        "apiKey": "API-1620730280AHX",
+            "merchantUid": waafiConfig.merchantUidCABDALLA if paymentApiType=='CABDALLA'  else waafiConfig.merchantUid,
+            "apiUserId": waafiConfig.apiUserIdCABDALLA if paymentApiType=='CABDALLA'  else waafiConfig.apiUserId,
+            "apiKey": waafiConfig.apiKeyCABDALLA if paymentApiType=='CABDALLA'  else waafiConfig.apiKey,
         "paymentMethod": "MWALLET_ACCOUNT",
         "payerInfo": {
         "accountNo": "252"+request.data['usrNumber']
@@ -1321,14 +1322,13 @@ def waafiAPIPREAUTHORIZE(request):
     if str(jsonPaidResp['responseCode'])=='2001':
         
         jsonCommitResponse = commitWaafiApiPREAUTHORIZE(jsonPaidResp)
-
-        return Response({'PRE_AUTH_RESP':jsonPaidResp,'COMMIT_RESP':jsonCommitResponse})
+        print(jsonCommitResponse)
+        return {'paided':True,'PRE_AUTH_RESP':jsonPaidResp,'COMMIT_RESP':jsonCommitResponse}
     else:
-        return Response({'PRE_AUTH_RESP':jsonPaidResp})
-
+        return {'paided':False,'PRE_AUTH_RESP':jsonPaidResp}
+    
 # @api_view(['POST'])
 def commitWaafiApiPREAUTHORIZE(request):
-    print(request)
     url = "https://api.waafipay.net/asm"
     headers = {'Content-Type': 'application/json'}
     
