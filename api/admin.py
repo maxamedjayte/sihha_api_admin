@@ -1,6 +1,6 @@
 from django.contrib import admin
 from api.models import *
-# Register your models hee.
+# Register your models he.
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
