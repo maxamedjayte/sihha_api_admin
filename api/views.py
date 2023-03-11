@@ -1127,7 +1127,7 @@ def merchantPaidApi(request,paymentType,itemType):
                 fullResp={'paided':True,'status':'success','productOrdred':True}
                 orderInfo='products not ordered'
             else:
-                fullResp={'paided':True,'status':'failded','productOrdred':False}
+                fullResp={'paided':False,'status':'failded','productOrdred':False,'message':paidResp['PRE_AUTH_RESP']['responseMsg'].split(',')[0].split('(')[1]}
                 
         elif itemType=='subscription':
             print('at subscripton')
@@ -1142,7 +1142,7 @@ def merchantPaidApi(request,paymentType,itemType):
                 userInfo.save()
                 fullResp={'paided':True,'status':'success','subscriptActivated':True,'fromDate':userInfo.latestSbscriptionDateFrom,'toDate':userInfo.latestSbscriptionDateTo}
             else:
-                fullResp={'paided':False,'status':'failed','subscriptActivated':False}
+                fullResp={'paided':False,'status':'failed','subscriptActivated':False,'message':paidResp['PRE_AUTH_RESP']['responseMsg'].split(',')[0].split('(')[1] }
         else:
             theCategory=request.data['theCategory']
             # userAssignedDated=request.data['userAssignedDated']
@@ -1150,7 +1150,6 @@ def merchantPaidApi(request,paymentType,itemType):
                 fullResp={'paided':True,'status':'success','isExist':True,'appointmentCreated':False}
             else:
                 paidResp=waafiAPIPREAUTHORIZE(request,'')
-                print(paidResp)
                 if paidResp['paided']:
                     try:
                         DoctorAppointment.objects.create(
@@ -1167,7 +1166,7 @@ def merchantPaidApi(request,paymentType,itemType):
                         print('user paided is except')
                         fullResp={'paided':True,'status':'failded','appointmentCreated':False}
                 else:
-                    fullResp={'status':'failed','appointmentCreated':False,'paided':False}
+                    fullResp={'status':'failed','appointmentCreated':False,'paided':False,'message':paidResp['PRE_AUTH_RESP']['responseMsg'].split(',')[0].split('(')[1]}
     return Response(fullResp)
 
 
@@ -1323,6 +1322,7 @@ def waafiAPIPREAUTHORIZE(request,paymentApiType):
         print(jsonCommitResponse)
         return {'paided':True,'PRE_AUTH_RESP':jsonPaidResp,'COMMIT_RESP':jsonCommitResponse}
     else:
+        print(jsonPaidResp)
         return {'paided':False,'PRE_AUTH_RESP':jsonPaidResp}
     
 # @api_view(['POST'])
