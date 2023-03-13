@@ -1093,6 +1093,7 @@ def generateCilajToTheUser(request,userId):
     thisUserProductRoutine = UserProductsRoutine.objects.filter(theUser=theUserInfo)
     thisUserMatchedAdkarWithTalo = theUserInfo.userMatchedAdkarWithTalo
     theUserInfo.latestTimeAnsweredQuestion=datetime.now()
+    theUserInfo.save()
     return Response({'guessedUserInformation':'guessedUserInformation'})
 
 
