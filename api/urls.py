@@ -12,7 +12,7 @@ urlpatterns = [
     path('user-login/',views.userLogin),
     path('check-user-exist/<str:number>/',views.checkUserExist),
 
-    # appInfo
+    # appInfopython
     path('appInfo-data/',views.appInfoData),
     # path('appInfo-create/',views.probQuestionCreate),
     # path('appInfo-update/<str:pk>/',views.probQuestionUpdate),

@@ -1088,8 +1088,11 @@ def generateCilajToTheUser(request,userId):
                     for productUsageTime in relProduct.theUsageTimes.all():
                         rtnUserProduct.usageTimes.add(productUsageTime)
                         rtnUserProduct.save()
+        else:
+            print('svd')
     thisUserProductRoutine = UserProductsRoutine.objects.filter(theUser=theUserInfo)
     thisUserMatchedAdkarWithTalo = theUserInfo.userMatchedAdkarWithTalo
+    theUserInfo.latestTimeAnsweredQuestion=datetime.now()
     return Response({'guessedUserInformation':'guessedUserInformation'})
 
 
