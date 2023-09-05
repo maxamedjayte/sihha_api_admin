@@ -1059,26 +1059,32 @@ def generateCilajToTheUserChild(request,userId,theChild):
 def generateCilajToTheUser(request,userId):
     theUserInfo=UserProfile.objects.get(pk=userId)
     probAnswers=ProbAnswer.objects.filter(theUser=theUserInfo)
+    print('at generating')
     # guessedUserInformation=guessTheUserPian(request,userId)
     for theAns in probAnswers:
+        print(f'at prob ansering {len(probAnswers)}')
+        print(theAns.answer)
         if theAns.answer:
             theUserInfo.userMatchedAdkarWithTalo.set(theAns.theProbQuestion.isTrueAdkarWithTaloyin.all())
+            print(f'leng leng {len(theAns.theProbQuestion.isTrueAdkarWithTaloyin.all())}')
             for relProduct in theAns.theProbQuestion.isTrueProducts.all():
-                if UserProductsRoutine.objects.filter(theUser=theUserInfo).filter(theUser=theUserInfo).exists() == False:
+                if UserProductsRoutine.objects.filter(theUser=theUserInfo).filter(theProduct=relProduct).exists() == False:
                     rtnUserProduct= UserProductsRoutine.objects.create(
                         theUser=theUserInfo,
                         theProduct=relProduct
                     )
+                    print(f'agenerating ering {len(probAnswers)}')
                     for productUsageTime in relProduct.theUsageTimes.all():
                         rtnUserProduct.usageTimes.add(productUsageTime)
                         rtnUserProduct.save()
-                    if ProductsInTheBug.objects.filter(theUser=theUserInfo,theProduct=relProduct).exists() == False:
+                    if ProductsInTheBug.objects.filter(theUser=theUserInfo).filter(theProduct=relProduct).exists() == False:
                         ProductsInTheBug.objects.create(
                             theUser=theUserInfo,
                             theProduct=relProduct,
                             isTaked=False
                         )
                     else:
+                        print('at already exist')
                         productsInTheBug=ProductsInTheBug.objects.filter(theUser=theUserInfo).filter(theProduct=relProduct).first()
                         productsInTheBug.isTaked=False
                         productsInTheBug.save()
@@ -1228,7 +1234,8 @@ def sendAppointmentNot(request,email):
         emailStatus.attach_alternative(msg_html,"text/html")
         emailStatus.send()
         status=200
-    except:
+    except Exception as e:
+        print(e)
         status=100
         return Response({'sended':False})
     return Response({'sended':True})
