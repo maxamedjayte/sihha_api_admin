@@ -98,19 +98,22 @@ def usersList(request):
 @login_required(login_url='/login/')
 def userDetail(request,pk):
     userInfo=UserProfile.objects.get(pk=pk)
-    
+    orders=OrderedProduct.objects.all()
+    products=ProductInfo.objects.all()
     userProbAnswers=ProbAnswer.objects.filter(theUser=userInfo)
-    userOrderedProducts=OrderedProduct.objects.filter(theUser=userInfo)
-    unTakedOrders=OrderedProduct.objects.filter(theUser=userInfo,userTaked=False)
-    completeOrders=OrderedProduct.objects.filter(theUser=userInfo,status='completed')
+    userOrderedProducts=orders.filter(theUser=userInfo)
+    unTakedOrders=orders.filter(theUser=userInfo,userTaked=False)
+    completeOrders=orders.filter(theUser=userInfo,status='completed')
     userProductsRoutine=UserProductsRoutine.objects.filter(theUser=userInfo)
     doctorAppointments=DoctorAppointment.objects.filter(theUser=userInfo)
     bugProducts=ProductsInTheBug.objects.filter(theUser=userInfo).filter(isTaked=False)
     userAnswerInformation = UserAnswerInformation.objects.filter(theUser=userInfo)
     myChilds = UserChildAnswerInformation.objects.filter(theUser=userInfo)
     childCounts=myChilds.distinct('theChild').count()
+    
+    adkarWithTaloyin=AdkarWithTalo.objects.all()
     routineTimes=RoutineTime.objects.all()
-    return render(request,'reg_mang/user_detail.html',{'completeOrders':completeOrders,'unTakedOrders':unTakedOrders,'myChilds':myChilds,'childCounts':childCounts,'userAnswerInformation':userAnswerInformation,'bugProducts':bugProducts,'doctorAppointments':doctorAppointments,'routineTimes':routineTimes,'userOrderedProducts':userOrderedProducts,'userProductsRoutine':userProductsRoutine,'userInfo':userInfo,'userProbAnswers':userProbAnswers})
+    return render(request,'reg_mang/user_detail.html',{'products':products,'adkarWithTaloyin':adkarWithTaloyin,'completeOrders':completeOrders,'unTakedOrders':unTakedOrders,'myChilds':myChilds,'childCounts':childCounts,'userAnswerInformation':userAnswerInformation,'bugProducts':bugProducts,'doctorAppointments':doctorAppointments,'routineTimes':routineTimes,'userOrderedProducts':userOrderedProducts,'userProductsRoutine':userProductsRoutine,'userInfo':userInfo,'userProbAnswers':userProbAnswers})
 
 
 

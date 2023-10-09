@@ -225,11 +225,13 @@ class OrderedProduct(models.Model):
     status=models.CharField(default='Pending',choices=PRODUCT_STATUS,max_length=25)
     orderTime=models.DateTimeField(auto_now=True)
     deliveredTime=models.DateTimeField(null=True,blank=True)
+    isFromBug=models.BooleanField(default=False)
     userTaked=models.BooleanField(default=False)
     paidedMoney=models.FloatField(default=0)
     userTakedTime=models.DateTimeField(null=True,blank=True)
     paymentMethod=models.CharField(max_length=255,default='EVC WAAFI-PAYMENT')
     discount=models.FloatField(default=0)
+
 
 
 
@@ -246,6 +248,18 @@ class OrderedProduct(models.Model):
         if self.userTaked:
             self.status=='Completed'
             self.userTakedTime=datetime.now()
+        
+        if self.isFromBug:
+            theProduct=ProductsInTheBug.objects.filter(pk=self.theProductInfo.pk)
+            if theProduct.exists():
+                theProduct=theProduct.first()
+                UserProductsRoutine.objects.create(
+                    theUser=self.theUser.pk,
+                    theProduct=self.theProductInfo.pk,
+                    usageTimes=theProduct.theUsageTimes,
+                    
+                )
+
         
         return super().save()
 
@@ -280,6 +294,7 @@ class DoctorAppointment(models.Model):
 class ProductsInTheBug(models.Model):
     theUser=models.ForeignKey(UserProfile,on_delete=models.CASCADE)
     theProduct=models.ForeignKey(ProductInfo,on_delete=models.CASCADE)
+    theUsageTimes=models.ManyToManyField(RoutineTime,null=True,blank=True)
     quantity=models.IntegerField(default=1)
     isTaked=models.BooleanField(default=False)
 
@@ -312,7 +327,14 @@ class UserChildAdkarWithProduct(models.Model):
 
     def __str__(self) -> str:
         return str(self.theUser )
+class SendNotification(models.Model):
+    theUser=models.ForeignKey(UserProfile,on_delete=models.CASCADE)
+    title=models.CharField(max_length=255,default='')
+    desc=models.CharField(max_length=255,default='')
+
     
+    def save(self,*args,**kwargs):
+        print('')
 
 class WaafiMarchentConfig(models.Model):
     merchantUid=models.CharField(default='',max_length=255)
