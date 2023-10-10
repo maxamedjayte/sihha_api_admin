@@ -1239,6 +1239,32 @@ def sendAppointmentNot(request,email):
         status=100
         return Response({'sended':False})
     return Response({'sended':True})
+
+
+
+@api_view(['POST'])
+def sendProbQuestionRequest(request,email):
+    status=400
+    try:
+        htmlText=request.data['htmlText']
+        msg_html = render_to_string('booking_email.html', {'theHtmlText': htmlText})
+        text_content = strip_tags(msg_html)
+        emailStatus = EmailMultiAlternatives(
+            'SIHHA PROB-QUESTION NOTIFICATION',
+            text_content,
+            'SIHHA APP '+settings.EMAIL_HOST_USER,
+            [email],
+        )
+        emailStatus.attach_alternative(msg_html,"text/html")
+        emailStatus.send()
+        status=200
+    except Exception as e:
+        print(e)
+        status=100
+        return Response({'sended':False})
+    return Response({'sended':True})
+
+
     # msg_html = render_to_string('invoice/reset-password.html', {'theUserName': theUser.fullName.split(' ')[0],'sendedCode':(int(sendedCode)+len(email))})
     # text_content = ' Waxaa is soo diiwaangaliyay currentUser!.fullName asigoo dalbaday in uu lakulmo doctor faahfaahin deeri ah http://shiffa-app.up.railway.app/user_detail/currentUser.id/',
     # emailStatus = EmailMultiAlternatives(

@@ -172,18 +172,30 @@
             <div class="row">
                 <div class="col-sm-12 col-md-4 col-lg-3">
                     <form class="custom-validation" id="sendMessage">
-
+                        <input type="hidden" value="{{userInfo.pk}}" name="theUser" class="form-control" required >
                         <div class="card">
                             <div class="card-body">
+                                
+                                <div class="m-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" name="isLocalNotification" class="form-check-input" required>
+                                        Is-Local-Notification
+                                    </label>
+                                </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Titleka Fariintaada</label>
+                                    <label class="form-label">Numberka</label>
+                                    <input type="number" name="number" class="form-control" required
+                                        placeholder="+252 61 00 00 00">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Title</label>
                                     <input type="title" name="text" class="form-control" required
                                         placeholder="+252 61 00 00 00">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Ku Qor Fariinta Halkaan</label>
                                     <div>
-                                        <textarea name="fariinta_message" required class="form-control"
+                                        <textarea name="desc" required class="form-control"
                                             rows="5"></textarea>
                                     </div>
                                 </div>

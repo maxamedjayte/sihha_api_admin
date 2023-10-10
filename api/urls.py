@@ -155,5 +155,7 @@ urlpatterns = [
     path('commitWaafiApiPREAUTHORIZE',views.commitWaafiApiPREAUTHORIZE),
     path('cancelWaafiApiPREAUTHORIZE',views.cancelWaafiApiPREAUTHORIZE),
     
-    path('sendAppointmentNot/<str:email>/',views.sendAppointmentNot)
+    path('sendAppointmentNot/<str:email>/',views.sendAppointmentNot),
+    path('sendProbQuestionRequest/<str:email>/',views.sendProbQuestionRequest)
+    
 ]   
