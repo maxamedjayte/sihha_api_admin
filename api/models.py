@@ -153,7 +153,7 @@ class ProbQuestion(models.Model):
     eng = models.CharField(max_length=255, default='')
     desc = models.TextField(null=True, blank=True)
     isTrueAdkarWithTaloyin = models.ManyToManyField(
-        AdkarWithTalo, null=True, blank=True)
+        AdkarWithTalo)
     isTrueProducts = models.ManyToManyField(ProductInfo, null=True, blank=True)
     regDate = models.DateField(auto_now=True)
 
@@ -183,7 +183,7 @@ class UserProfile(models.Model):
     latestTimeAnsweredQuestion = models.DateField(null=True, blank=True)
     latestSbscriptionDateFrom = models.DateField(null=True, blank=True)
     latestSbscriptionDateTo = models.DateField(null=True, blank=True)
-    inPending = models.BooleanField(default=True)
+    inPending = models.BooleanField(default=False)
     isSubscribedUser = models.BooleanField(default=False)
     subscriptionActive = models.BooleanField(default=False)
     is_activate = models.BooleanField(default=False)
@@ -405,3 +405,25 @@ class WaafiMarchentConfig(models.Model):
 
     def __str__(self) -> str:
         return str(self.merchantUid)
+
+
+
+class PatientResult(models.Model):
+    theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    resultTitle=models.CharField(max_length=255,default='JAWAABTA BAARINTAANKA')
+    resultDesc=models.TextField(default='')
+    latestResult=models.BooleanField(default=True)
+    resultDate=models.DateTimeField()
+    adkarsWithTalos=models.ManyToManyField(
+        AdkarWithTalo, null=True, blank=True)
+    routineProducts=models.ManyToManyField(
+        UserProductsRoutine, null=True, blank=True)
+
+
+    def save(self, *args, **kwargs):
+        if self.latestResult:
+            PatientResult.objects.update(latestResult=False)
+
+
+        return super().save()
+        

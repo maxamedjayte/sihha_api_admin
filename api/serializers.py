@@ -172,3 +172,10 @@ class DoctorAppointmentSerializers(serializers.ModelSerializer):
         fields='__all__'
         depth=1
 
+
+class PatientResultSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=PatientResult
+        fields='__all__'
+        depth=2
+

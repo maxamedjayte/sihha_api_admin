@@ -29,6 +29,18 @@ class DoctorAppointmentAdmin(admin.ModelAdmin):
     list_display=('theUser','doctorAssignedDated','theCategory','appointmentMeetingLink','sessionEnded')
     # ordering: 
     search_fields=('theUser','appointmentMeetingLink','theCategory','doctorAssignedDated','sessionEnded')
+
+
+@admin.register(PatientResult)
+class PatientResultAdmin(admin.ModelAdmin):
+    list_display=('theUser','resultTitle','resultDate')
+    # ordering: 
+    search_fields=('theUser','resultTitle','resultDate')
+
+
+
+
+
 admin.site.register(ChildProbAnswer)
 admin.site.register(ShikhCategory)
 admin.site.register(UserProductsRoutine)

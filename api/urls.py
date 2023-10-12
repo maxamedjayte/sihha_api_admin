@@ -131,12 +131,27 @@ urlpatterns = [
     path('listeningCilajWithQuran-detail/<str:pk>/',views.listeningCilajWithQuranDetail),
 
 
+
+    path('listeningCilajWithQuran-list/',views.listeningCilajWithQuranList),
+    path('listeningCilajWithQuran-create/',views.listeningCilajWithQuranCreate),
+    path('listeningCilajWithQuran-update/<str:pk>/',views.listeningCilajWithQuranUpdate),
+    path('listeningCilajWithQuran-delete/<str:pk>/',views.listeningCilajWithQuranDelete),
+    path('listeningCilajWithQuran-detail/<str:pk>/',views.listeningCilajWithQuranDetail),
+
     path('shikhCategory-list/',views.shikhCategoryList),
     path('shikhCategory-create/',views.shikhCategoryCreate),
     path('shikhCategory-update/<str:pk>/',views.shikhCategoryUpdate),
     path('shikhCategory-delete/<str:pk>/',views.shikhCategoryDelete),
     path('shikhCategory-detail/<str:pk>/',views.shikhCategoryDetail),
     path('thisShikhListening-list/<str:shikhId>/',views.thisShikhListeningList),
+
+
+    path('patientResult-list/', views.patientResultList),
+    path('patientResult-create/', views.patientResultCreate),
+    path('patientResult-update/<str:pk>/', views.patientResultUpdate),
+    path('patientResult-delete/<str:pk>/', views.patientResultDelete),
+    path('patientResult-detail/<str:pk>/', views.patientResultDetail),
+    path('thisPatientResult-detail/<str:userId>/',views.thisPatientResult),
 
     # user appointment
     path('generateCilajToTheUser/<str:userId>/',views.generateCilajToTheUser),

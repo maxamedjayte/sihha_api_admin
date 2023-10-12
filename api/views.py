@@ -992,6 +992,49 @@ def guessTheUserChildPian(request,userId,theChild):
 
 
 
+@api_view(['GET'])
+def patientResultList(request):
+    objects = PatientResult.objects.all()
+    serializer = PatientResultSerializers(objects, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def patientResultCreate(request):
+    serializer = PatientResultSerializers(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"status": "success", "data": serializer.data})
+    else:
+        return Response({"status": "error", "data": serializer.errors})
+
+@api_view(['GET'])
+def patientResultDetail(request, pk):
+    theObject = PatientResult.objects.get(pk=pk)
+    serializer = PatientResultSerializers(theObject, many=False)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def patientResultUpdate(request, pk):
+    theObject = PatientResult.objects.get(pk=pk)
+    serializer = PatientResultSerializers(instance=theObject, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"status": "success", "data": serializer.data})
+    else:
+        return Response({"status": "error", "data": serializer.errors})
+
+@api_view(['DELETE'])
+def patientResultDelete(request, pk):
+    theObject = PatientResult.objects.get(pk=pk)
+    theObject.delete()
+    return Response({"status": "success"})
+
+@api_view(['GET'])
+def thisPatientResult(request,userId):
+    theObject=PatientResult.objects.filter(theUser=userId).last()
+    serializer=PatientResultSerializers(theObject,many=False)
+    return Response(serializer.data)
+
 
 
 
