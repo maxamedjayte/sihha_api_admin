@@ -377,8 +377,9 @@ class SendNotification(models.Model):
     def save(self, *args, **kwargs):
         if self.isLocalNotification:
             message = {
-                "notification_id": self.theUser.fireMessageId,
+                # "notification_id": self.theUser.fireMessageId,
                 "notification_type": self.title,
+                "to":self.theUser.fireMessageId,
                 "notification": {
                     "title": self.title,
                     "body": self.desc,
@@ -423,7 +424,17 @@ class PatientResult(models.Model):
     def save(self, *args, **kwargs):
         if self.latestResult:
             PatientResult.objects.update(latestResult=False)
-
+        
+        self.theUser.inPending=False
+        self.theUser.latestTimeAnsweredQuestion=self.resultDate
+        self.theUser.save()
+        SendNotification.objects.create(
+            theUser = self.theUser,
+            title ="JAWAABTA BAARINTAAKA",
+            desc ="waxaa walaal laguus oo diyaariyaya jawaabtii dhaqtarqa",
+            isLocalNotification =True
+        )
+        
 
         return super().save()
         
