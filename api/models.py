@@ -187,7 +187,14 @@ class UserProfile(models.Model):
     isSubscribedUser = models.BooleanField(default=False)
     subscriptionActive = models.BooleanField(default=False)
     is_activate = models.BooleanField(default=False)
-
+    
+    
+    def save(self, *args, **kwargs):
+        if self.inPending:
+            self.latestTimeAnsweredQuestion = datetime.now()
+            
+        return super().save()
+            
     def theImage(self):
         if self.profileImage:
             return mark_safe('<img src={} width="100px" >'.format(self.profileImage.url))
@@ -423,10 +430,13 @@ class PatientResult(models.Model):
 
     def save(self, *args, **kwargs):
         if self.latestResult:
-            PatientResult.objects.update(latestResult=False)
+            PatientResult.objects.filter(theUser=self.theUser).update(latestResult=False)
         
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
+        self.theUser.subscriptionActive=True
+        for thAdkar in self.adkarsWithTalos.all():
+            self.theUser.userMatchedAdkarWithTalo.add(thAdkar)
         self.theUser.save()
         SendNotification.objects.create(
             theUser = self.theUser,
