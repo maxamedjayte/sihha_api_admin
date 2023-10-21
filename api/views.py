@@ -123,7 +123,7 @@ def countTheQuestionCateg():
 @api_view(['GET'])
 def probQuestionList(request):
     countTheQuestionCateg()
-    objects=ProbQuestion.objects.all()
+    objects=ProbQuestion.objects.all()[:10]
     serializer=ProbQuestionSerializer(objects,many=True)
     return Response(serializer.data)
 
