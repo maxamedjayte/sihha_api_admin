@@ -217,7 +217,7 @@ class UserProductsRoutine(models.Model):
     usageTimes = models.ManyToManyField(RoutineTime, null=True, blank=True)
 
     def __str__(self) -> str:
-        return str(self.theProduct.name)+' -- '+str(self.fromDate) + ' -- '+str(self.toDate)
+        return str(self.theProduct.name)+' -- '+str(self.theUser)
 
 
 class ProbAnswer(models.Model):
@@ -431,7 +431,8 @@ class PatientResult(models.Model):
     def save(self, *args, **kwargs):
         if self.latestResult:
             PatientResult.objects.filter(theUser=self.theUser).update(latestResult=False)
-        
+            
+        super().save(*args, **kwargs)
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
         self.theUser.subscriptionActive=True
@@ -445,5 +446,5 @@ class PatientResult(models.Model):
             isLocalNotification =True
         )
         
-        return super().save()
+        
         
