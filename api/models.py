@@ -441,10 +441,9 @@ class PatientResult(models.Model):
         SendNotification.objects.create(
             theUser = self.theUser,
             title ="JAWAABTA BAARINTAAKA",
-            desc ="waxaa walaal laguus oo diyaariyaya jawaabtii dhaqtarqa",
+            desc =self.resultDesc,
             isLocalNotification =True
         )
         
-
         return super().save()
         
