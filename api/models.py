@@ -431,7 +431,7 @@ class PatientResult(models.Model):
     def save(self, *args, **kwargs):
         if self.latestResult:
             PatientResult.objects.filter(theUser=self.theUser).update(latestResult=False)
-            
+
         super().save(*args, **kwargs)
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
@@ -445,6 +445,7 @@ class PatientResult(models.Model):
             desc =self.resultDesc,
             isLocalNotification =True
         )
+        return super().save()
         
         
         
