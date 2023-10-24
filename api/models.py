@@ -340,13 +340,16 @@ class DoctorAppointment(models.Model):
         
     
     def save(self, *args, **kwargs):
-        SendNotification.objects.create(
-            theUser = self.theUser,
-            title ="KULANKA DHAQTARKA",
-            notificationType='DOCTOR-APPOINTMENT',
-            desc =f'{self.theUser.fullName.split(" ")[0]} waxaa lagaaray waqtgii aad la kulmi lahaeed dhaqtarka fadlan ku soo xaadir sida ugu dhaqsiyaha badan',
-            isLocalNotification =True
-        )
+        if self.appointmentMeetingLink is not None:
+            SendNotification.objects.create(
+                theUser = self.theUser,
+                title ="KULANKA DHAQTARKA",
+                notificationType='DOCTOR-APPOINTMENT',
+                desc =f'{self.theUser.fullName.split(" ")[0]} waxaa lagaaray waqtgii aad la kulmi lahaeed dhaqtarka fadlan ku soo xaadir sida ugu dhaqsiyaha badan',
+                isLocalNotification =True
+            )
+
+        return super().save()
     def __str__(self) -> str:
         return str(self.theUser)+' -- '+str(self.userRate)
 
