@@ -22,6 +22,7 @@ class AppInformation(models.Model):
     loginPageImage = models.ImageField(
         upload_to='images/appInfo', null=True, blank=True)
     fmLink = models.CharField(max_length=10000, default='')
+    contactNumber=models.CharField(max_length=20,default="252619820834")
     youSearchedText = models.CharField(max_length=500)
     isThereDiscount = models.BooleanField(default=False)
     discountSubscriptionPrice = models.FloatField(default=5)
