@@ -23,6 +23,7 @@ class OrderedProductAdmin(admin.ModelAdmin):
     search_fields=('fullName','theProductInfo__name','orderTime','status')
 
 admin.site.register(ProductCategory)
+admin.site.register(SendNotification)
 admin.site.register(AppointmentCategory)
 @admin.register(DoctorAppointment)
 class DoctorAppointmentAdmin(admin.ModelAdmin):

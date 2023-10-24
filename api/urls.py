@@ -138,6 +138,13 @@ urlpatterns = [
     path('listeningCilajWithQuran-delete/<str:pk>/',views.listeningCilajWithQuranDelete),
     path('listeningCilajWithQuran-detail/<str:pk>/',views.listeningCilajWithQuranDetail),
 
+
+    # 
+    
+    path('thisUserNotification-list/<str:userId>/',views.thisUserNotifcationList),
+
+
+
     path('shikhCategory-list/',views.shikhCategoryList),
     path('shikhCategory-create/',views.shikhCategoryCreate),
     path('shikhCategory-update/<str:pk>/',views.shikhCategoryUpdate),

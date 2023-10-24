@@ -430,6 +430,18 @@ def thisUserProductsInTheBugList(request,userId):
 
 
 
+# usernotification
+
+@api_view(['GET'])
+def thisUserNotifcationList(request,userId):
+    theObject=SendNotification.objects.filter(theUser=userId)
+    serializer=SendNotificationSerializer(theObject,many=True)
+    return Response(serializer.data)
+
+
+
+
+
 
 
 # adkarWithTalo

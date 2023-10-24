@@ -204,7 +204,7 @@ class UserProfile(models.Model):
     theImage.allow_tags = True
 
     def __str__(self) -> str:
-        return str(self.fullName)+' -- '+str(self.number)
+        return  str(self.id) +' '+ str(self.fullName)+' -- '+str(self.number)
 
 
 class UserProductsRoutine(models.Model):
@@ -278,9 +278,17 @@ class OrderedProduct(models.Model):
         if self.status == 'Completed':
             self.userTakedTime = datetime.now()
             self.userTaked = True
+            
 
         if self.status == 'Delivering':
             self.deliveredTime = datetime.now()
+            SendNotification.objects.create(
+                theUser = self.theUser,
+                notificationType='ORDER',
+                title =f"Delivering Product {self.theProductInfo.name} [ {self.quantity} ]",
+                desc =f'Macaamiil Waxaa laguu soo dhiibay Productigi {self.theProductInfo.name} tiradiiso ahayd [ {self.quantity} ] waxaan rajayneena in ay si fudud kuu soo gaaro inshalah',
+                isLocalNotification =True
+            )
 
         if self.userTaked:
             self.status == 'Completed'
@@ -297,6 +305,7 @@ class OrderedProduct(models.Model):
                     usageTimes=theProduct.theUsageTimes,
 
                 )
+        
 
         return super().save()
 
@@ -328,6 +337,16 @@ class DoctorAppointment(models.Model):
     class Meta:
         ordering = ['-sessionEnded']
 
+        
+    
+    def save(self, *args, **kwargs):
+        SendNotification.objects.create(
+            theUser = self.theUser,
+            title ="KULANKA DHAQTARKA",
+            notificationType='DOCTOR-APPOINTMENT',
+            desc =f'{self.theUser.fullName.split(" ")[0]} waxaa lagaaray waqtgii aad la kulmi lahaeed dhaqtarka fadlan ku soo xaadir sida ugu dhaqsiyaha badan',
+            isLocalNotification =True
+        )
     def __str__(self) -> str:
         return str(self.theUser)+' -- '+str(self.userRate)
 
@@ -374,12 +393,20 @@ class UserChildAdkarWithProduct(models.Model):
         return str(self.theUser)
 
 
+NOTIFICATION_TYPE = (
+    ('ORDER', 'ORDER'),
+    ('DOCTOR-APPOINTMENT', 'DOCTOR-APPOINTMENT'),
+    ('PRODUCT-IN-THE-BUG', 'PRODUCT-IN-THE-BUG'),
+    ('PATIENT-RESULT', 'PATIENT-RESULT')
+)
 class SendNotification(models.Model):
-    theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE,related_name='notifcations')
     title = models.CharField(max_length=255, default='')
     desc = models.CharField(max_length=255, default='')
+    notificationType=models.CharField(max_length=255,choices=NOTIFICATION_TYPE,default='ORDER')
     isLocalNotification = models.BooleanField(default=False)
     number = models.IntegerField(default=0)
+    datetime = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if self.isLocalNotification:
@@ -400,6 +427,7 @@ class SendNotification(models.Model):
                     "Content-Type": "application/json"
                 }
             )
+        return super().save()
 
 
 class WaafiMarchentConfig(models.Model):
@@ -442,6 +470,7 @@ class PatientResult(models.Model):
         SendNotification.objects.create(
             theUser = self.theUser,
             title ="JAWAABTA BAARINTAAKA",
+            notificationType='PATIENT-RESULT',
             desc =self.resultDesc,
             isLocalNotification =True
         )

@@ -3,7 +3,17 @@ from rest_framework import serializers
 from .models import *
 
 
+
+class SendNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SendNotification
+        fields=['id','title','desc','notificationType','isLocalNotification','number','datetime']
+        depth=1
+
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
+    notifcations=SendNotificationSerializer(read_only=True,many=True)
     class Meta:
         model=UserProfile
         fields='__all__'
