@@ -1110,6 +1110,17 @@ def generateCilajToTheUserChild(request,userId,theChild):
     return Response({'guessedUserInformation':'guessedUserInformation'})
 
 
+
+
+
+
+# @api_view(['GET'])
+# def assingQuestionProductsToTheBug(request,userId):
+#     theUserInfo=UserProfile.objects.get(pk=userId)
+#     probAnswers=ProbAnswer.objects.filter(theUser=theUserInfo)
+    
+
+
 @api_view(['GET'])
 def generateCilajToTheUser(request,userId):
     theUserInfo=UserProfile.objects.get(pk=userId)
@@ -1121,7 +1132,6 @@ def generateCilajToTheUser(request,userId):
         print(theAns.answer)
         if theAns.answer:
             theUserInfo.userMatchedAdkarWithTalo.set(theAns.theProbQuestion.isTrueAdkarWithTaloyin.all())
-            print(f'leng leng {len(theAns.theProbQuestion.isTrueAdkarWithTaloyin.all())}')
             for relProduct in theAns.theProbQuestion.isTrueProducts.all():
                 if UserProductsRoutine.objects.filter(theUser=theUserInfo).filter(theProduct=relProduct).exists() == False:
                     rtnUserProduct= UserProductsRoutine.objects.create(

@@ -300,10 +300,13 @@ class OrderedProduct(models.Model):
                 pk=self.theProductInfo.pk)
             if theProduct.exists():
                 theProduct = theProduct.first()
+                theProduct.isTaked=True
+                theProduct.save()
                 UserProductsRoutine.objects.create(
                     theUser=self.theUser.pk,
                     theProduct=self.theProductInfo.pk,
                     usageTimes=theProduct.theUsageTimes,
+                    isTakedProduct=True,
 
                 )
         
@@ -361,6 +364,9 @@ class ProductsInTheBug(models.Model):
     theUsageTimes = models.ManyToManyField(RoutineTime, null=True, blank=True)
     quantity = models.IntegerField(default=1)
     isTaked = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return str(self.theUser)+' -- '+str(self.theProduct)
 
 
 class UserAnswerInformation(models.Model):
@@ -467,11 +473,15 @@ class PatientResult(models.Model):
         super().save(*args, **kwargs)
 
         for prd in self.routineProducts.all():
-            ProductsInTheBug.objects.create(
-            theUser = self.theUser,
-            theProduct=prd.theProduct,
-            quantity=2,
-            )
+            print(prd)
+            print(prd.theProduct)
+            if prd.isTakedProduct==False:
+                ProductsInTheBug.objects.create(
+                theUser = self.theUser,
+                theProduct=prd.theProduct,
+                quantity=2,
+                # theUsageTimes=prd.usageTimes
+                )
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
         self.theUser.subscriptionActive=True
