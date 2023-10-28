@@ -278,7 +278,7 @@ class OrderedProduct(models.Model):
     def save(self, *args, **kwargs):
         if self.isFromBug:
             theProduct = ProductsInTheBug.objects.filter(
-                pk=self.theProductInfo)
+                pk=self.theProductInfo.pk)
             if theProduct.exists():
                 theProduct = theProduct.first()
                 # theProduct.isTaked=True
