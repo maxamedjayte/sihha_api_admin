@@ -22,7 +22,7 @@ class AppInformation(models.Model):
     loginPageImage = models.ImageField(
         upload_to='images/appInfo', null=True, blank=True)
     fmLink = models.CharField(max_length=10000, default='')
-    contactNumber=models.CharField(max_length=20,default="252619820834")
+    contactNumber = models.CharField(max_length=20, default="252619820834")
     youSearchedText = models.CharField(max_length=500)
     isThereDiscount = models.BooleanField(default=False)
     discountSubscriptionPrice = models.FloatField(default=5)
@@ -188,14 +188,13 @@ class UserProfile(models.Model):
     isSubscribedUser = models.BooleanField(default=False)
     subscriptionActive = models.BooleanField(default=False)
     is_activate = models.BooleanField(default=False)
-    
-    
+
     def save(self, *args, **kwargs):
         if self.inPending:
             self.latestTimeAnsweredQuestion = datetime.now()
-            
+
         return super().save()
-            
+
     def theImage(self):
         if self.profileImage:
             return mark_safe('<img src={} width="100px" >'.format(self.profileImage.url))
@@ -205,7 +204,7 @@ class UserProfile(models.Model):
     theImage.allow_tags = True
 
     def __str__(self) -> str:
-        return  str(self.id) +' '+ str(self.fullName)+' -- '+str(self.number)
+        return str(self.id) + ' ' + str(self.fullName)+' -- '+str(self.number)
 
 
 class UserProductsRoutine(models.Model):
@@ -280,16 +279,15 @@ class OrderedProduct(models.Model):
         if self.status == 'Completed':
             self.userTakedTime = datetime.now()
             self.userTaked = True
-            
 
         if self.status == 'Delivering':
             self.deliveredTime = datetime.now()
             SendNotification.objects.create(
-                theUser = self.theUser,
+                theUser=self.theUser,
                 notificationType='ORDER',
-                title =f"Delivering Product {self.theProductInfo.name} [ {self.quantity} ]",
-                desc =f'Macaamiil Waxaa laguu soo dhiibay Productigi {self.theProductInfo.name} tiradiiso ahayd [ {self.quantity} ] waxaan rajayneena in ay si fudud kuu soo gaaro inshalah',
-                isLocalNotification =True
+                title=f"Delivering Product {self.theProductInfo.name} [ {self.quantity} ]",
+                desc=f'Macaamiil Waxaa laguu soo dhiibay Productigi {self.theProductInfo.name} tiradiiso ahayd [ {self.quantity} ] waxaan rajayneena in ay si fudud kuu soo gaaro inshalah',
+                isLocalNotification=True
             )
 
         if self.userTaked:
@@ -298,19 +296,25 @@ class OrderedProduct(models.Model):
 
         if self.isFromBug:
             theProduct = ProductsInTheBug.objects.filter(
-                pk=self.theProductInfo.pk)
+                pk=self.theProductInfo)
             if theProduct.exists():
-                theProduct = theProduct.first()
-                theProduct.isTaked=True
-                theProduct.save()
-                UserProductsRoutine.objects.create(
-                    theUser=self.theUser.pk,
-                    theProduct=self.theProductInfo.pk,
-                    usageTimes=theProduct.theUsageTimes,
-                    isTakedProduct=True
+                # theProduct = theProduct.first()
+                # theProduct.isTaked=True
+                # theProduct.save()
+                if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
+                    UserProductsRoutine.objects.create(
+                        theUser=self.theUser.pk,
+                        theProduct=self.theProductInfo.pk,
+                        usageTimes=theProduct.theUsageTimes,
+                        isTakedProduct=True
+                    )
+                else:
+                    UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
+                        usageTimes=theProduct.theUsageTimes,
+                        isTakedProduct=True
 
-                )
-        
+                    )
+                theProduct.delete()
 
         return super().save()
 
@@ -342,19 +346,18 @@ class DoctorAppointment(models.Model):
     class Meta:
         ordering = ['-sessionEnded']
 
-        
-    
     def save(self, *args, **kwargs):
         if self.appointmentMeetingLink is not None:
             SendNotification.objects.create(
-                theUser = self.theUser,
-                title ="KULANKA DHAQTARKA",
+                theUser=self.theUser,
+                title="KULANKA DHAQTARKA",
                 notificationType='DOCTOR-APPOINTMENT',
-                desc =f'{self.theUser.fullName.split(" ")[0]} waxaa lagaaray waqtgii aad la kulmi lahaeed dhaqtarka fadlan ku soo xaadir sida ugu dhaqsiyaha badan',
-                isLocalNotification =True
+                desc=f'{self.theUser.fullName.split(" ")[0]} waxaa lagaaray waqtgii aad la kulmi lahaeed dhaqtarka fadlan ku soo xaadir sida ugu dhaqsiyaha badan',
+                isLocalNotification=True
             )
 
         return super().save()
+
     def __str__(self) -> str:
         return str(self.theUser)+' -- '+str(self.userRate)
 
@@ -410,11 +413,15 @@ NOTIFICATION_TYPE = (
     ('PRODUCT-IN-THE-BUG', 'PRODUCT-IN-THE-BUG'),
     ('PATIENT-RESULT', 'PATIENT-RESULT')
 )
+
+
 class SendNotification(models.Model):
-    theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE,related_name='notifcations')
+    theUser = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name='notifcations')
     title = models.CharField(max_length=255, default='')
     desc = models.CharField(max_length=255, default='')
-    notificationType=models.CharField(max_length=255,choices=NOTIFICATION_TYPE,default='ORDER')
+    notificationType = models.CharField(
+        max_length=255, choices=NOTIFICATION_TYPE, default='ORDER')
     isLocalNotification = models.BooleanField(default=False)
     number = models.IntegerField(default=0)
     datetime = models.DateTimeField(auto_now=True)
@@ -424,7 +431,7 @@ class SendNotification(models.Model):
             message = {
                 # "notification_id": self.theUser.fireMessageId,
                 "notification_type": self.title,
-                "to":self.theUser.fireMessageId,
+                "to": self.theUser.fireMessageId,
                 "notification": {
                     "title": self.title,
                     "body": self.desc,
@@ -454,52 +461,49 @@ class WaafiMarchentConfig(models.Model):
         return str(self.merchantUid)
 
 
-
 class PatientResult(models.Model):
     theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    resultTitle=models.CharField(max_length=255,default='JAWAABTA BAARINTAANKA')
-    resultDesc=models.TextField(default='')
-    latestResult=models.BooleanField(default=True)
-    resultDate=models.DateTimeField()
-    adkarsWithTalos=models.ManyToManyField(
+    resultTitle = models.CharField(
+        max_length=255, default='JAWAABTA BAARINTAANKA')
+    resultDesc = models.TextField(default='')
+    latestResult = models.BooleanField(default=True)
+    resultDate = models.DateTimeField()
+    adkarsWithTalos = models.ManyToManyField(
         AdkarWithTalo, null=True, blank=True)
-    routineProducts=models.ManyToManyField(
+    routineProducts = models.ManyToManyField(
         UserProductsRoutine, null=True, blank=True)
-
 
     def save(self, *args, **kwargs):
         if self.latestResult:
-            PatientResult.objects.filter(theUser=self.theUser).update(latestResult=False)
+            PatientResult.objects.filter(
+                theUser=self.theUser).update(latestResult=False)
 
         super().save(*args, **kwargs)
 
         for prd in self.routineProducts.all():
-            
-            if prd.isTakedProduct==False:
+
+            if prd.isTakedProduct == False:
                 ProductsInTheBug.objects.create(
-                theUser = self.theUser,
-                theProduct=prd.theProduct,
-                quantity=prd.quantity,
-                # theUsageTimes=prd.usageTimes
-            )
-        self.theUser.inPending=False
-        self.theUser.latestTimeAnsweredQuestion=self.resultDate
-        self.theUser.subscriptionActive=True
+                    theUser=self.theUser,
+                    theProduct=prd.theProduct,
+                    quantity=prd.quantity,
+                    # theUsageTimes=prd.usageTimes
+                )
+        self.theUser.inPending = False
+        self.theUser.latestTimeAnsweredQuestion = self.resultDate
+        self.theUser.subscriptionActive = True
         for thAdkar in self.adkarsWithTalos.all():
             self.theUser.userMatchedAdkarWithTalo.add(thAdkar)
         self.theUser.save()
-        
+
         super().save(*args, **kwargs)
         SendNotification.objects.create(
-            theUser = self.theUser,
-            title ="JAWAABTA BAARINTAAKA",
+            theUser=self.theUser,
+            title="JAWAABTA BAARINTAAKA",
             notificationType='PATIENT-RESULT',
-            desc =self.resultDesc,
-            isLocalNotification =True
+            desc=self.resultDesc,
+            isLocalNotification=True
         )
-        
+
         super().save(*args, **kwargs)
         return super().save()
-        
-        
-        
