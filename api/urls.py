@@ -166,7 +166,7 @@ urlpatterns = [
     path('generateCilajToTheUserChild/<str:userId>/<str:theChild>/',views.generateCilajToTheUserChild),
     path('guessTheUserPian/<str:userId>/',views.guessTheUserPian),
 
-
+    path('test/new',views.testApi),
 
     path('userPaidingCharges/<str:paymentType>/<str:itemType>/',views.merchantPaidApi),
 
