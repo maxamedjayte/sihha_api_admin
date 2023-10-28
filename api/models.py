@@ -465,6 +465,13 @@ class PatientResult(models.Model):
             PatientResult.objects.filter(theUser=self.theUser).update(latestResult=False)
 
         super().save(*args, **kwargs)
+
+        for prd in self.routineProducts.all():
+            ProductsInTheBug.objects.create(
+            theUser = self.theUser,
+            theProduct=prd.theProduct,
+            quantity=2,
+            )
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
         self.theUser.subscriptionActive=True
