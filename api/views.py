@@ -418,7 +418,7 @@ def productsInTheBugDetail(request,pk):
 
 @api_view(['GET'])
 def thisUserProductsInTheBugList(request,userId):
-    theObjects=ProductsInTheBug.objects.filter(theUser=userId)
+    theObjects=ProductsInTheBug.objects.filter(theUser=userId).filter(isTaked=False)
     serializer=ProductsInTheBugSerializer(theObjects,many=True)
     return Response(serializer.data)
 
@@ -1211,7 +1211,7 @@ def merchantPaidApi(request,paymentType,itemType):
                     paymentMethod=paymentType,
                     isFromBug=True if theProduct['type']=='BUG' else False
                 )
-                
+
             fullResp={'paided':True,'status':'success','productOrdred':True}
             orderInfo='products not ordered'
         else:
