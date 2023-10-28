@@ -111,7 +111,7 @@ class OrderedProductCreateSerializer(serializers.ModelSerializer):
 class UserProductsRoutineSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserProductsRoutine
-        fields=['id','theProduct','isRoutine','fromDate','toDate','usageTimes']
+        fields=['id','theProduct','isRoutine','fromDate','toDate','usageTimes','isTakedProduct']
         depth=3
 
 
