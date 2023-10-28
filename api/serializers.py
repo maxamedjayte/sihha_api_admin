@@ -26,6 +26,7 @@ class AppInformationSerializer(serializers.ModelSerializer):
         depth=1
 
 class UserProfileCreateSerializer(serializers.ModelSerializer):
+    notifcations=SendNotificationSerializer(read_only=True,many=True)
     class Meta:
         model=UserProfile
         fields='__all__'
