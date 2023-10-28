@@ -1203,16 +1203,15 @@ def merchantPaidApi(request,paymentType,itemType):
         paidResp=waafiAPIPREAUTHORIZE(request,'')
         if paidResp['paided']:
             for theProduct in productsInfo:
-                print(theProduct)
-                print(theProduct['id'])
                 OrderedProduct.objects.create(
                     theUser=UserProfile.objects.get(pk=usrId),
                     theProductInfo=ProductInfo.objects.get(pk=theProduct['id']),
                     quantity=int(theProduct['quantity']),
                     paidedMoney=float(request.data['usrMoney']),
-                    paymentMethod=paymentType
+                    paymentMethod=paymentType,
+                    isFromBug=True if theProduct['type']=='BUG' else False
                 )
-                print(theProduct)
+                
             fullResp={'paided':True,'status':'success','productOrdred':True}
             orderInfo='products not ordered'
         else:

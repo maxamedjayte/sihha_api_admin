@@ -212,6 +212,7 @@ class UserProductsRoutine(models.Model):
     theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     theProduct = models.ForeignKey(ProductInfo, on_delete=models.CASCADE)
     isRoutine = models.BooleanField(default=True)
+    quantity = models.IntegerField(default=1)
     isTakedProduct = models.BooleanField(default=False)
     fromDate = models.DateField(default=datetime.now())
     toDate = models.DateField(default=datetime.now() + timedelta(days=2))
@@ -306,7 +307,7 @@ class OrderedProduct(models.Model):
                     theUser=self.theUser.pk,
                     theProduct=self.theProductInfo.pk,
                     usageTimes=theProduct.theUsageTimes,
-                    isTakedProduct=True,
+                    isTakedProduct=True
 
                 )
         
@@ -473,21 +474,22 @@ class PatientResult(models.Model):
         super().save(*args, **kwargs)
 
         for prd in self.routineProducts.all():
-            print(prd)
-            print(prd.theProduct)
+            
             if prd.isTakedProduct==False:
                 ProductsInTheBug.objects.create(
                 theUser = self.theUser,
                 theProduct=prd.theProduct,
-                quantity=2,
+                quantity=prd.quantity,
                 # theUsageTimes=prd.usageTimes
-                )
+            )
         self.theUser.inPending=False
         self.theUser.latestTimeAnsweredQuestion=self.resultDate
         self.theUser.subscriptionActive=True
         for thAdkar in self.adkarsWithTalos.all():
             self.theUser.userMatchedAdkarWithTalo.add(thAdkar)
         self.theUser.save()
+        
+        super().save(*args, **kwargs)
         SendNotification.objects.create(
             theUser = self.theUser,
             title ="JAWAABTA BAARINTAAKA",
@@ -495,6 +497,8 @@ class PatientResult(models.Model):
             desc =self.resultDesc,
             isLocalNotification =True
         )
+        
+        super().save(*args, **kwargs)
         return super().save()
         
         
