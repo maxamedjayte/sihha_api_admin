@@ -276,6 +276,28 @@ class OrderedProduct(models.Model):
         ordering = ['-userTaked']
 
     def save(self, *args, **kwargs):
+        if self.isFromBug:
+            theProduct = ProductsInTheBug.objects.filter(
+                pk=self.theProductInfo)
+            if theProduct.exists():
+                theProduct = theProduct.first()
+                # theProduct.isTaked=True
+                # theProduct.save()
+                if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
+                    UserProductsRoutine.objects.create(
+                        theUser=self.theUser.pk,
+                        theProduct=self.theProductInfo.pk,
+                        usageTimes=theProduct.theUsageTimes,
+                        isTakedProduct=True
+                    )
+                else:
+                    UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
+                        usageTimes=theProduct.theUsageTimes,
+                        isTakedProduct=True
+
+                    )
+                theProduct.delete()
+
         if self.status == 'Completed':
             self.userTakedTime = datetime.now()
             self.userTaked = True
@@ -294,28 +316,7 @@ class OrderedProduct(models.Model):
             self.status == 'Completed'
             self.userTakedTime = datetime.now()
 
-        if self.isFromBug:
-            theProduct = ProductsInTheBug.objects.filter(
-                pk=self.theProductInfo)
-            if theProduct.exists():
-                # theProduct = theProduct.first()
-                # theProduct.isTaked=True
-                # theProduct.save()
-                if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
-                    UserProductsRoutine.objects.create(
-                        theUser=self.theUser.pk,
-                        theProduct=self.theProductInfo.pk,
-                        usageTimes=theProduct.theUsageTimes,
-                        isTakedProduct=True
-                    )
-                else:
-                    UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
-                        usageTimes=theProduct.theUsageTimes,
-                        isTakedProduct=True
-
-                    )
-                theProduct.delete()
-
+        
         return super().save()
 
     def __str__(self) -> str:
