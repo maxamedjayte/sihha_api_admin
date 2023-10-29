@@ -294,7 +294,6 @@ class OrderedProduct(models.Model):
                     UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
                         usageTimes=theProduct.theUsageTimes,
                         isTakedProduct=True
-
                     )
                 theProduct.delete()
 
@@ -484,12 +483,14 @@ class PatientResult(models.Model):
         for prd in self.routineProducts.all():
 
             if prd.isTakedProduct == False:
-                ProductsInTheBug.objects.create(
-                    theUser=self.theUser,
-                    theProduct=prd.theProduct,
-                    quantity=prd.quantity,
-                    # theUsageTimes=prd.usageTimes
-                )
+                if ProductsInTheBug.objects.filter(theUser=self.theUser.pk).filter(theProduct=prd.theProduct.pk).exists()==False:
+                    ProductsInTheBug.objects.create(
+                        theUser=self.theUser,
+                        theProduct=prd.theProduct,
+                        quantity=prd.quantity,
+                        # theUsageTimes=prd.usageTimes
+                    )
+
         self.theUser.inPending = False
         self.theUser.latestTimeAnsweredQuestion = self.resultDate
         self.theUser.subscriptionActive = True
