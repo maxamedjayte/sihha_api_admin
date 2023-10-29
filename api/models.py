@@ -283,7 +283,7 @@ class OrderedProduct(models.Model):
                 theProduct = theProduct.first()
                 # theProduct.isTaked=True
                 # theProduct.save()
-                print('topop')
+            
                 print(UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists())
                 if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
                     UserProductsRoutine.objects.create(
@@ -292,12 +292,17 @@ class OrderedProduct(models.Model):
                         # usageTimes=theProduct.theUsageTimes.all(),
                         isTakedProduct=True
                     )
+                    
                 else:
                     UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
-                        # usageTimes=theProduct.theUsageTimes,
+                        # usageTimes=theProduct.theUsageTimes.all(),
                         isTakedProduct=True
                     )
-                theProduct.delete()
+                
+                ProductsInTheBug.objects.filter(theProduct=self.theProductInfo.pk).update(
+                    isTaked=True
+                )
+                
 
         if self.status == 'Completed':
             self.userTakedTime = datetime.now()
