@@ -289,12 +289,12 @@ class OrderedProduct(models.Model):
                     UserProductsRoutine.objects.create(
                         theUser=self.theUser.pk,
                         theProduct=self.theProductInfo.pk,
-                        usageTimes=theProduct.theUsageTimes,
+                        # usageTimes=theProduct.theUsageTimes.all(),
                         isTakedProduct=True
                     )
                 else:
                     UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
-                        usageTimes=theProduct.theUsageTimes,
+                        # usageTimes=theProduct.theUsageTimes,
                         isTakedProduct=True
                     )
                 theProduct.delete()
