@@ -1209,7 +1209,7 @@ def merchantPaidApi(request,paymentType,itemType):
                     quantity=int(theProduct['quantity']),
                     paidedMoney=float(request.data['usrMoney']),
                     paymentMethod=paymentType,
-                    isFromBug= True if theProduct['type']=='bug' else False
+                    isFromBug= True if str(theProduct['type']).lower()=='bug' else False
                 )
 
             fullResp={'paided':True,'status':'success','productOrdred':True}

@@ -283,6 +283,8 @@ class OrderedProduct(models.Model):
                 theProduct = theProduct.first()
                 # theProduct.isTaked=True
                 # theProduct.save()
+                print('topop')
+                print(UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists())
                 if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
                     UserProductsRoutine.objects.create(
                         theUser=self.theUser.pk,
