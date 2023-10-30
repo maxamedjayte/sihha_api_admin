@@ -273,7 +273,7 @@ class OrderedProduct(models.Model):
     discount = models.FloatField(default=0)
 
     class Meta:
-        ordering = ['-userTaked']
+        ordering = ['-status']
 
     def save(self, *args, **kwargs):
         if self.isFromBug:

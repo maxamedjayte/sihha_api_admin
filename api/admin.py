@@ -19,7 +19,7 @@ admin.site.register(ProbAnswer)
 class OrderedProductAdmin(admin.ModelAdmin):
     list_display=('theUser','theProductInfo','quantity','orderTime','status','userTaked')
     # ordering: 
-    ordering = ['-userTaked']
+    ordering = ['-status']
     search_fields=('fullName','theProductInfo__name','orderTime','status')
 
 admin.site.register(ProductCategory)
