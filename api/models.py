@@ -482,7 +482,6 @@ class PatientResult(models.Model):
         super().save(*args, **kwargs)
 
         for prd in self.routineProducts.all():
-
             if prd.isTakedProduct == False:
                 ProductsInTheBug.objects.create(
                     theUser=self.theUser,
