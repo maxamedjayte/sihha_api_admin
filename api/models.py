@@ -278,25 +278,31 @@ class OrderedProduct(models.Model):
     def save(self, *args, **kwargs):
         if self.isFromBug:
             theProduct = ProductsInTheBug.objects.filter(
-                pk=self.theProductInfo.pk)
+                theProduct=self.theProductInfo.pk)
             if theProduct.exists():
                 theProduct = theProduct.first()
                 # theProduct.isTaked=True
                 # theProduct.save()
+            
+                print(UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists())
                 if UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).exists() == False:
                     UserProductsRoutine.objects.create(
                         theUser=self.theUser.pk,
                         theProduct=self.theProductInfo.pk,
-                        usageTimes=theProduct.theUsageTimes,
+                        # usageTimes=theProduct.theUsageTimes.all(),
                         isTakedProduct=True
                     )
+                    
                 else:
                     UserProductsRoutine.objects.filter(theProduct=self.theProductInfo.pk).filter(theUser=self.theUser.pk).update(
-                        usageTimes=theProduct.theUsageTimes,
+                        # usageTimes=theProduct.theUsageTimes.all(),
                         isTakedProduct=True
-
                     )
-                theProduct.delete()
+                
+                ProductsInTheBug.objects.filter(theProduct=self.theProductInfo.pk).update(
+                    isTaked=True
+                )
+                
 
         if self.status == 'Completed':
             self.userTakedTime = datetime.now()
@@ -483,12 +489,14 @@ class PatientResult(models.Model):
 
         for prd in self.routineProducts.all():
             if prd.isTakedProduct == False:
-                ProductsInTheBug.objects.create(
-                    theUser=self.theUser,
-                    theProduct=prd.theProduct,
-                    quantity=prd.quantity,
-                    # theUsageTimes=prd.usageTimes
-                )
+                if ProductsInTheBug.objects.filter(theUser=self.theUser.pk).filter(theProduct=prd.theProduct.pk).exists()==False:
+                    ProductsInTheBug.objects.create(
+                        theUser=self.theUser,
+                        theProduct=prd.theProduct,
+                        quantity=prd.quantity,
+                        # theUsageTimes=prd.usageTimes
+                    )
+
         self.theUser.inPending = False
         self.theUser.latestTimeAnsweredQuestion = self.resultDate
         self.theUser.subscriptionActive = True
