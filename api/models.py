@@ -472,7 +472,7 @@ class PatientResult(models.Model):
     theUser = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     resultTitle = models.CharField(
         max_length=255, default='JAWAABTA BAARINTAANKA')
-    resultDesc = models.TextField(default='',max_length=555555555)
+    resultDesc = models.TextField(default='')
     latestResult = models.BooleanField(default=True)
     resultDate = models.DateTimeField()
     adkarsWithTalos = models.ManyToManyField(
@@ -509,7 +509,7 @@ class PatientResult(models.Model):
             theUser=self.theUser,
             title="JAWAABTA BAARINTAAKA",
             notificationType='PATIENT-RESULT',
-            desc=self.resultDesc,
+            desc=len(self.resultDesc)=>50 if self.resultDesc[0:50] else self.resultDesc,
             isLocalNotification=True
         )
 
