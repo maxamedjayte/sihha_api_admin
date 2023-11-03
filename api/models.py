@@ -509,7 +509,7 @@ class PatientResult(models.Model):
             theUser=self.theUser,
             title="JAWAABTA BAARINTAAKA",
             notificationType='PATIENT-RESULT',
-            desc=len(self.resultDesc)=>50 if self.resultDesc[0:50] else self.resultDesc,
+            desc=len(self.resultDesc) >=50 if self.resultDesc[0:50] else self.resultDesc,
             isLocalNotification=True
         )
 
