@@ -273,7 +273,7 @@ class OrderedProduct(models.Model):
     discount = models.FloatField(default=0)
 
     class Meta:
-        ordering = ['-userTaked']
+        ordering = ['-status']
 
     def save(self, *args, **kwargs):
         if self.isFromBug:
@@ -488,7 +488,6 @@ class PatientResult(models.Model):
         super().save(*args, **kwargs)
 
         for prd in self.routineProducts.all():
-
             if prd.isTakedProduct == False:
                 if ProductsInTheBug.objects.filter(theUser=self.theUser.pk).filter(theProduct=prd.theProduct.pk).exists()==False:
                     ProductsInTheBug.objects.create(
