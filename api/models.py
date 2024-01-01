@@ -5,7 +5,6 @@ from decouple import config
 from django.utils.safestring import mark_safe
 import requests
 from django.db import models
-from cloudinary_storage.storage import VideoMediaCloudinaryStorage
 
 
 class SubscriptionFeatures(models.Model):
@@ -60,8 +59,7 @@ class ListeningCilajWithQuran(models.Model):
         default='', max_length=10000, null=True, blank=True)
     voiceLink = models.CharField(
         default='', max_length=10000, null=True, blank=True)
-    voice = models.FileField(upload_to='voice/listeningCilajWithQuran/',
-                             null=True, blank=True, storage=VideoMediaCloudinaryStorage())
+    voice = models.FileField(upload_to='voice/listeningCilajWithQuran/',null=True, blank=True)
     text = models.TextField(default='')
 
 
@@ -114,7 +112,7 @@ class ProductInfo(models.Model):
 class AdkarWithTalo(models.Model):
     name = models.CharField(max_length=255)
     voice = models.FileField(upload_to='voice/adkarWithTalo/',
-                             null=True, blank=True, storage=VideoMediaCloudinaryStorage())
+                             null=True, blank=True)
     isAdkar = models.BooleanField(default=False)
     itsArabic = models.BooleanField(default=True)
     text = models.TextField(default='')
@@ -509,7 +507,7 @@ class PatientResult(models.Model):
             theUser=self.theUser,
             title="JAWAABTA BAARINTAAKA",
             notificationType='PATIENT-RESULT',
-            desc=len(self.resultDesc) >=50 if self.resultDesc[0:50] else self.resultDesc,
+            desc=(len(self.resultDesc) >=50) if self.resultDesc[0:50] else self.resultDesc,
             isLocalNotification=True
         )
 

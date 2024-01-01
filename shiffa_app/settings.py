@@ -38,9 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'corsheaders',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
     'api',
     'rest_framework',
 ]
@@ -164,11 +162,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'du40ai4io',
-    'API_KEY': '794514871691573',
-    'API_SECRET': 'rOm_tEepuXfKf3izbXrWrvfDvvg'
-}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -202,7 +196,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 MEDIA_URL='/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 # Default primary key field type
