@@ -139,7 +139,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
-CSRF_TRUSTED_ORIGINS=['https://shiffa-app.up.railway.app','http://shiffa-app.site','https://shiffa-online.up.railway.app']
+CSRF_TRUSTED_ORIGINS=['https://shiffa-app.up.railway.app','5.189.156.143','http://shiffa-app.site','https://shiffa-online.up.railway.app']
 CSRF_COOKIE_SECURE=False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

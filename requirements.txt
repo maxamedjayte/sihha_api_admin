@@ -6,7 +6,9 @@ Django==4.1.2
 django-cors-headers==3.13.0
 django-jazzmin==2.6.0
 djangorestframework==3.14.0
+gunicorn==21.2.0
 idna==3.4
+packaging==23.2
 Pillow==9.3.0
 psycopg2-binary==2.9.5
 PyJWT==2.6.0
