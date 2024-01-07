@@ -5,7 +5,6 @@ from django.shortcuts import render,redirect
 import requests
 
 from shiffa_app import settings
-from decouple import config
 from rest_framework.decorators import api_view
 from datetime import datetime
 
@@ -14,7 +13,6 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import os
 import random
-from decouple import config
 # Create your views here.
 
 # userprofiles data

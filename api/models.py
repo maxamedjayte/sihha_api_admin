@@ -1,10 +1,11 @@
 from datetime import datetime
 from datetime import timedelta
 from email.policy import default
-from decouple import config
 from django.utils.safestring import mark_safe
 import requests
 from django.db import models
+
+fmcAuthKey="AAAAggj-YH4:APA91bHNKxtv6XZkXGXaRGZhstva1ORX9SPpLT0Ka-QmPU2HXI8aPMsGp9czJ5v2iuMiEJCCvhc1jpXxAcZmf6Bt8yYk4dV0Bw1PiAozFilCz2pOVwwkzOT0hYB8vPg5my0V5kWZxbin"
 
 
 class SubscriptionFeatures(models.Model):
@@ -446,7 +447,7 @@ class SendNotification(models.Model):
                 "https://fcm.googleapis.com/fcm/send",
                 json=message,
                 headers={
-                    "Authorization": f'key={config("fmcAuthKey")}',
+                    "Authorization": f'key={fmcAuthKey}',
                     "Content-Type": "application/json"
                 }
             )
