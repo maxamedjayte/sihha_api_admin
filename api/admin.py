@@ -44,7 +44,12 @@ class PatientResultAdmin(admin.ModelAdmin):
 
 admin.site.register(ChildProbAnswer)
 admin.site.register(ShikhCategory)
-admin.site.register(UserProductsRoutine)
+@admin.register(UserProductsRoutine)
+class UserProductsRoutineAdmin(admin.ModelAdmin):
+    list_display=('theUser','theProduct','quantity','fromDate','toDate')
+    # ordering: 
+    search_fields=('theUser__name','theUser__id','theProduct','quantity','fromDate','toDate')
+
 @admin.register(AdkarWithTalo)
 class AdkarWithTaloAdmin(admin.ModelAdmin):
     list_display=('name','readingCount','created')
